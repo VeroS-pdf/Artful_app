@@ -1,0 +1,74 @@
+/* Design tokens, reset and base typography. */
+
+:root {
+  color-scheme: light;
+
+  --font-ui: 'Nunito Variable', ui-rounded, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+
+  --paper: #ffffff;
+  --text: #2b3a3f;
+  --muted: #5d6e74;
+  --line: #e3eded;
+  --on-accent: #1d3533;
+  --danger: #a03f3f;
+  --danger-tint: #fdeded;
+
+  /* Default accent: pastel teal. Folders override these three (see colorVars in colors.ts). */
+  --accent: #7fd1c7;
+  --accent-deep: #25766f;
+  --accent-tint: #e6f6f4;
+
+  --shadow: 0 1px 2px rgba(50, 90, 90, 0.06), 0 10px 30px rgba(50, 100, 100, 0.1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  color: var(--text);
+  background:
+    radial-gradient(900px 600px at 0% 0%, #d9f2ee 0, transparent 60%),
+    radial-gradient(800px 600px at 100% 8%, #efe6fb 0, transparent 55%),
+    radial-gradient(900px 700px at 55% 105%, #fde6ee 0, transparent 55%), #f6fbfa;
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent-deep);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
