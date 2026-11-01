@@ -1,5 +1,5 @@
 import { DEFAULT_COLOR, type ColorKey } from '../colors';
-import type { AppData, Folder, Note } from '../types';
+import type { AppData, Folder, InspirationPost, Note } from '../types';
 
 export type Action =
   | { type: 'folder/add'; folder: Folder }
@@ -13,7 +13,10 @@ export type Action =
   | { type: 'note/toggle'; id: string; now: number; restoreFolderId: string }
   | { type: 'note/delete'; id: string }
   | { type: 'note/addImages'; id: string; imageIds: string[] }
-  | { type: 'note/removeImage'; id: string; imageId: string };
+  | { type: 'note/removeImage'; id: string; imageId: string }
+  | { type: 'inspiration/add'; posts: InspirationPost[] }
+  | { type: 'inspiration/note'; id: string; note: string }
+  | { type: 'inspiration/delete'; id: string };
 
 function updateNote(state: AppData, id: string, change: (note: Note) => Note): AppData {
   return { ...state, notes: state.notes.map((n) => (n.id === id ? change(n) : n)) };
@@ -34,6 +37,7 @@ export function reducer(state: AppData, action: Action): AppData {
       const folder = state.folders.find((f) => f.id === action.id);
       if (!folder) return state;
       return {
+        ...state,
         folders: state.folders.filter((f) => f.id !== action.id),
         // Open notes go with the folder; completed ones stay in the archive.
         notes: state.notes
@@ -73,6 +77,7 @@ export function reducer(state: AppData, action: Action): AppData {
       }
       const restoredTo = folderId;
       return {
+        ...state,
         folders,
         notes: state.notes.map((n) =>
           n.id === action.id
@@ -90,5 +95,17 @@ export function reducer(state: AppData, action: Action): AppData {
 
     case 'note/removeImage':
       return updateNote(state, action.id, (n) => ({ ...n, imageIds: n.imageIds.filter((i) => i !== action.imageId) }));
+
+    case 'inspiration/add':
+      return { ...state, inspiration: [...state.inspiration, ...action.posts] };
+
+    case 'inspiration/note':
+      return {
+        ...state,
+        inspiration: state.inspiration.map((p) => (p.id === action.id ? { ...p, note: action.note } : p)),
+      };
+
+    case 'inspiration/delete':
+      return { ...state, inspiration: state.inspiration.filter((p) => p.id !== action.id) };
   }
 }

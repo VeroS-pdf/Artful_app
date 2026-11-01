@@ -3,6 +3,7 @@ import { colorVars } from './colors';
 import { CompletedView } from './components/CompletedView';
 import { FolderView } from './components/FolderView';
 import { ImageViewer } from './components/ImageViewer';
+import { InspirationView } from './components/InspirationView';
 import { Landing } from './components/Landing';
 import { NoteDetail } from './components/NoteDetail';
 import { Sidebar } from './components/Sidebar';
@@ -56,6 +57,7 @@ function Shell() {
         {view.kind === 'folder' && folder && (
           <FolderView key={folder.id} folder={folder} onOpenNote={setOpenNoteId} onViewImages={setImageNoteId} />
         )}
+        {view.kind === 'inspiration' && <InspirationView />}
         {view.kind === 'completed' && <CompletedView onOpenNote={setOpenNoteId} onViewImages={setImageNoteId} />}
       </main>
 

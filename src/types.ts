@@ -1,4 +1,5 @@
 import type { ColorKey } from './colors';
+import type { PostKind } from './instagram';
 
 export interface Folder {
   id: string;
@@ -24,7 +25,17 @@ export interface Note {
   completedAt: number | null;
 }
 
+/** A saved Instagram post: just the link (and a note) — the post itself stays on Instagram. */
+export interface InspirationPost {
+  id: string;
+  url: string;
+  kind: PostKind;
+  note: string;
+  addedAt: number;
+}
+
 export interface AppData {
   folders: Folder[];
   notes: Note[];
+  inspiration: InspirationPost[];
 }

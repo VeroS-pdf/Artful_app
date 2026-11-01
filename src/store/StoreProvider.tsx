@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, useRef, type ReactNode } from 'react';
 import type { ColorKey } from '../colors';
-import type { Folder, Note } from '../types';
+import type { InstagramLink } from '../instagram';
+import type { Folder, InspirationPost, Note } from '../types';
 import { uid } from '../uid';
 import { deleteImages, saveImage } from './images';
 import { reducer } from './reducer';
@@ -19,11 +20,16 @@ interface Actions {
   deleteNote(id: string): void;
   attachImages(id: string, images: Blob[]): Promise<void>;
   removeImage(id: string, imageId: string): void;
+  /** Saves links that aren't already saved and reports how many were new. */
+  addInspiration(links: InstagramLink[]): { added: number; duplicates: number };
+  editInspirationNote(id: string, note: string): void;
+  deleteInspiration(id: string): void;
 }
 
 interface Store extends Actions {
   folders: Folder[];
   notes: Note[];
+  inspiration: InspirationPost[];
 }
 
 const StoreContext = createContext<Store | null>(null);
@@ -87,11 +93,25 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         dispatch({ type: 'note/removeImage', id, imageId });
         discardImages([imageId]);
       },
+      addInspiration(links) {
+        const saved = new Set(stateRef.current.inspiration.map((p) => p.url));
+        const fresh = links.filter((l) => !saved.has(l.url));
+        const now = Date.now();
+        // The list shows newest first, so stagger the timestamps to keep the pasted order.
+        const posts = fresh.map((l, i): InspirationPost => ({ id: uid(), url: l.url, kind: l.kind, note: '', addedAt: now - i }));
+        if (posts.length > 0) dispatch({ type: 'inspiration/add', posts });
+        return { added: posts.length, duplicates: links.length - posts.length };
+      },
+      editInspirationNote: (id, note) => dispatch({ type: 'inspiration/note', id, note }),
+      deleteInspiration: (id) => dispatch({ type: 'inspiration/delete', id }),
     }),
     [],
   );
 
-  const value = useMemo<Store>(() => ({ folders: state.folders, notes: state.notes, ...actions }), [state, actions]);
+  const value = useMemo<Store>(
+    () => ({ folders: state.folders, notes: state.notes, inspiration: state.inspiration, ...actions }),
+    [state, actions],
+  );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
 }

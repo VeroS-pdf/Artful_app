@@ -13,6 +13,12 @@
 - **Pictures** stay hidden until you click the little image icon on a note. The icon only appears on
   notes that actually have pictures.
 - Deleting a folder deletes its open notes, but completed notes stay in the archive.
+- **Instagram inspiration** tab: a place to dump Instagram posts you want to remember. Paste any number
+  of links at once (or import the file from Instagram's "Download your information" export) and add a
+  note on why each one inspires you. "Show post" loads a post from Instagram only when you click it.
+
+Instagram doesn't allow apps to read your Saved posts, so there is no automatic sync. Posts are kept as
+links, and the post itself always stays on Instagram.
 
 ## Run it
 
@@ -36,9 +42,10 @@ React 19 + TypeScript + Vite, no UI library.
 
 ## Where your data lives
 
-Everything stays in your browser; nothing is sent anywhere.
+Everything stays in your browser; nothing is sent anywhere. The one exception is the Instagram
+"Show post" button, which loads that post from Instagram when you click it.
 
-- Folders and notes: `localStorage` (key `artful-app:v1`)
+- Folders, notes and saved Instagram links: `localStorage` (key `artful-app:v1`)
 - Pictures: IndexedDB (database `artful-app`), loaded only when you open them. Pictures over 1.5 MB
   are shrunk to at most 2000px before saving.
 

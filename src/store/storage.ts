@@ -1,5 +1,5 @@
 import { DEFAULT_COLOR, isColorKey } from '../colors';
-import type { AppData, Folder, Note } from '../types';
+import type { AppData, Folder, InspirationPost, Note } from '../types';
 import { uid } from '../uid';
 
 const STORAGE_KEY = 'artful-app:v1';
@@ -29,9 +29,23 @@ function readNote(value: unknown): Note | null {
   };
 }
 
+function readPost(value: unknown): InspirationPost | null {
+  if (!isRecord(value) || typeof value.id !== 'string' || typeof value.url !== 'string') return null;
+  if (value.kind !== 'p' && value.kind !== 'reel' && value.kind !== 'tv') return null;
+  // The link becomes an href and an iframe src, so only ever accept Instagram's own address.
+  if (!value.url.startsWith('https://www.instagram.com/')) return null;
+  return {
+    id: value.id,
+    url: value.url,
+    kind: value.kind,
+    note: typeof value.note === 'string' ? value.note : '',
+    addedAt: typeof value.addedAt === 'number' ? value.addedAt : Date.now(),
+  };
+}
+
 /** A brand-new install starts with one teal folder so there is somewhere to drop the first idea. */
 function seed(): AppData {
-  return { folders: [{ id: uid(), name: 'Ideas', color: DEFAULT_COLOR }], notes: [] };
+  return { folders: [{ id: uid(), name: 'Ideas', color: DEFAULT_COLOR }], notes: [], inspiration: [] };
 }
 
 export function loadData(): AppData {
@@ -43,6 +57,10 @@ export function loadData(): AppData {
         return {
           folders: parsed.folders.map(readFolder).filter((f): f is Folder => f !== null),
           notes: parsed.notes.map(readNote).filter((n): n is Note => n !== null),
+          // Saved before this tab existed, so it may be missing.
+          inspiration: Array.isArray(parsed.inspiration)
+            ? parsed.inspiration.map(readPost).filter((p): p is InspirationPost => p !== null)
+            : [],
         };
       }
     }

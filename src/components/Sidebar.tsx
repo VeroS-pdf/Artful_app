@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { colorVars } from '../colors';
 import { useStore } from '../store/StoreProvider';
 import type { View } from '../view';
-import { CheckCircleIcon, Logo, PlusIcon, SparkleIcon } from './Icons';
+import { CameraIcon, CheckCircleIcon, Logo, PlusIcon, SparkleIcon } from './Icons';
 import { NewFolderForm } from './NewFolderForm';
 
 interface SidebarProps {
@@ -10,9 +10,9 @@ interface SidebarProps {
   onNavigate: (view: View) => void;
 }
 
-/** Vertical tabs: a "new idea" tab, one per folder, and the Completed archive. */
+/** Vertical tabs: a "new idea" tab, one per folder, Instagram inspiration, and the Completed archive. */
 export function Sidebar({ view, onNavigate }: SidebarProps) {
-  const { folders, notes, addFolder } = useStore();
+  const { folders, notes, inspiration, addFolder } = useStore();
   const [adding, setAdding] = useState(false);
 
   const openCounts = useMemo(() => {
@@ -77,16 +77,29 @@ export function Sidebar({ view, onNavigate }: SidebarProps) {
         )}
       </nav>
 
-      <button
-        type="button"
-        className="side-item side-item--archive"
-        aria-current={current(view.kind === 'completed')}
-        onClick={() => onNavigate({ kind: 'completed' })}
-      >
-        <CheckCircleIcon />
-        <span className="side-name">Completed</span>
-        {completedCount > 0 && <span className="count">{completedCount}</span>}
-      </button>
+      <div className="side-footer">
+        <button
+          type="button"
+          className="side-item"
+          style={colorVars('pink')}
+          aria-current={current(view.kind === 'inspiration')}
+          onClick={() => onNavigate({ kind: 'inspiration' })}
+        >
+          <CameraIcon />
+          <span className="side-name">Instagram inspiration</span>
+          {inspiration.length > 0 && <span className="count">{inspiration.length}</span>}
+        </button>
+        <button
+          type="button"
+          className="side-item"
+          aria-current={current(view.kind === 'completed')}
+          onClick={() => onNavigate({ kind: 'completed' })}
+        >
+          <CheckCircleIcon />
+          <span className="side-name">Completed</span>
+          {completedCount > 0 && <span className="count">{completedCount}</span>}
+        </button>
+      </div>
     </aside>
   );
 }

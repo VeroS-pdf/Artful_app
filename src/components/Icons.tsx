@@ -78,6 +78,19 @@ export const SparkleIcon = () => (
   </Icon>
 );
 
+export const CameraIcon = () => (
+  <Icon>
+    <path d="M4 8.5A2.5 2.5 0 0 1 6.5 6H8l1.2-2h5.6L16 6h1.5A2.5 2.5 0 0 1 20 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5v-9Z" />
+    <circle cx="12" cy="13" r="3.6" />
+  </Icon>
+);
+
+export const ExternalIcon = () => (
+  <Icon width="1em" height="1em">
+    <path d="M14 4h6v6M20 4l-9 9M18 14v4.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10" />
+  </Icon>
+);
+
 export const ChevronIcon = () => (
   <Icon>
     <path d="m9 6 6 6-6 6" />
