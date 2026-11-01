@@ -1,10 +1,5 @@
 # Artful
 
-*For when ideas just randomly hit!*
-
-A pastel idea-catcher. Open the app and it asks **"What's the idea?"**: type anything, drop it into a
-colorful folder, and check it off when it's done.
-
 ## Features
 
 - **Landing page** with an open text box. Attach pictures, pick a folder (or make a new one), and save.
